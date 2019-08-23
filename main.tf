@@ -21,8 +21,18 @@ resource "ibm_compute_vm_instance" "vm_local_exec_sample" {
     local_disk = false
     ssh_key_ids = ["${ibm_compute_ssh_key.ssh_key.id}"]
 
-    provisioner "local-exec" {
-      command = "sh ${var.vm-post-install-script-uri}"
+    /*
+    provisioner "file" {
+      source = "nginx.sh"
+      destination = "/tmp/nginx.sh"
+    }
+    */
+
+    provisioner "remote-exec" {
+      inline = [
+        #"sh /tmp/nginx.sh"
+        "yum install nginx -y"
+      ]
     }
 }
 
